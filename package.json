@@ -1,0 +1,25 @@
+{
+  "name": "crimethory",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "./node_modules/babel-cli/bin/babel-node.js index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mkf-simpson/crimethory.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mkf-simpson/crimethory/issues"
+  },
+  "homepage": "https://github.com/mkf-simpson/crimethory#readme",
+  "dependencies": {
+    "babel-cli": "^6.16.0",
+    "babel-preset-latest": "^6.16.0",
+    "express": "^4.14.0"
+  }
+}
