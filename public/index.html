@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="/css/foundation.css">
     <link rel="stylesheet" href="/css/app.css">
     <link href="https://fonts.googleapis.com/css?family=Proza+Libre" rel="stylesheet">
+    <script src="/socket.io/socket.io.js"></script>
     <style>
       html, body {
         margin: 0;
@@ -203,6 +204,13 @@
 
         el.style.opacity = ~~!~~el.style.opacity;
       }
+
+      window.addEventListener("load", () => {
+        var socket = io();
+        socket.on("mqtt message", (msg) => {
+          console.log(msg);
+        });
+      });
     </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxff4cnltkHkbBZYzEiRcsxjsoQqWLle0&callback=initMap&libraries=places"></script>
     <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
