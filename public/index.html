@@ -15,10 +15,12 @@
         height: 100%;
         width: 100% !important;
         max-width: initial;
-      }
-      .section {
-        height: 100%;
-        background-color: black;
+        z-index: 2;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
       }
       .map-container {
         width: 100%;
@@ -34,6 +36,7 @@
         background: white;
         border-radius: 5px;
         opacity: 0.8;
+        z-index: 3;
       }
       .pie-chart {
         position: absolute;
@@ -45,6 +48,7 @@
         left: 30px;
         border-radius: 5px;
         opacity: 0.8;
+        z-index: 3;
       }
       .tweets {
         position: absolute;
@@ -57,6 +61,7 @@
         border-radius: 5px;
         opacity: 0.8;
         overflow: auto;
+        z-index: 3;
       }
       .search {
         position: absolute;
@@ -66,7 +71,74 @@
         transform: translate(-50%);
         border: 1px solid black;
         border-radius: 5px;
+        z-index: 3;
       }
+      .spinner {
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+      }
+
+      .cube1, .cube2 {
+        background-color: white;
+        width: 15px;
+        height: 15px;
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        -webkit-animation: sk-cubemove 1.8s infinite ease-in-out;
+        animation: sk-cubemove 1.8s infinite ease-in-out;
+      }
+
+      .cube2 {
+        -webkit-animation-delay: -0.9s;
+        animation-delay: -0.9s;
+      }
+
+      @-webkit-keyframes sk-cubemove {
+        25% { -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5) }
+        50% { -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg) }
+        75% { -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5) }
+        100% { -webkit-transform: rotate(-360deg) }
+      }
+
+      @keyframes sk-cubemove {
+        25% {
+          transform: translateX(42px) rotate(-90deg) scale(0.5);
+          -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5);
+        } 50% {
+          transform: translateX(42px) translateY(42px) rotate(-179deg);
+          -webkit-transform: translateX(42px) translateY(42px) rotate(-179deg);
+        } 50.1% {
+          transform: translateX(42px) translateY(42px) rotate(-180deg);
+          -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg);
+        } 75% {
+          transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+          -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+        } 100% {
+          transform: rotate(-360deg);
+          -webkit-transform: rotate(-360deg);
+        }
+      }
+
+      .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(100,181,246 ,0.8);
+        /*opacity: 0;*/
+        transition: opacity 1s;
+        /*display: none;*/
+      }
+
+
     </style>
 
   </head>
@@ -90,10 +162,14 @@
       <blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">Давно не заходил в твиттер. Что тут нового?</p>&mdash; Igor V Churmeev (@Ingvarch) <a href="https://twitter.com/Ingvarch/status/786132890165751808">12 октября 2016 г.</a></blockquote>
       <blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">Давно не заходил в твиттер. Что тут нового?</p>&mdash; Igor V Churmeev (@Ingvarch) <a href="https://twitter.com/Ingvarch/status/786132890165751808">12 октября 2016 г.</a></blockquote>
       <blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">Давно не заходил в твиттер. Что тут нового?</p>&mdash; Igor V Churmeev (@Ingvarch) <a href="https://twitter.com/Ingvarch/status/786132890165751808">12 октября 2016 г.</a></blockquote>
-
     </div>
     <input type="text" class="search" placeholder="Поиск" autofocus />
-
+    <div class="overlay" style="opacity: 0; z-index: 1;">
+      <div class="spinner">
+        <div class="cube1"></div>
+        <div class="cube2"></div>
+      </div>
+    </div>
     <script>
       function initMap() {
         var uluru = {lat: 55.757972, lng: 37.599507};
@@ -114,6 +190,18 @@
           marker.setMap(map);
           map.setCenter(this.getPlace().geometry.location);
         });
+      }
+
+
+      function showOrHideSpinner() {
+        const el = document.querySelector('.overlay');
+        if (el.style.zIndex === 5) {
+          el.style.zIndex = 1;
+        } else {
+          el.style.zIndex = 5;
+        }
+
+        el.style.opacity = ~~!~~el.style.opacity;
       }
     </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxff4cnltkHkbBZYzEiRcsxjsoQqWLle0&callback=initMap&libraries=places"></script>
