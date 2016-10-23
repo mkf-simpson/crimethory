@@ -48,7 +48,7 @@ io.on('connection', (socket) => {
     socket.on('get stat', ({ lat, lng, month }) => {
         const uid = uuid.v1();
         const request = {
-            path: "/jobs/crimethory_2.10-0.0.10.jar",
+            path: "/jobs/crimethory_2.10-0.0.16.jar",
             className: "CrimeByPoint$",
             namespace: "crime-requested-jobs",
             parameters: {
@@ -59,6 +59,8 @@ io.on('connection', (socket) => {
             external_id: uid
         };
         runningJobs[uid] = socket;
-        client.publish("foo", JSON.stringify(request));
+        setTimeout(() => {
+            client.publish("foo", JSON.stringify(request));
+        }, 1000);
     });
 });

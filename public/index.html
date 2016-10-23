@@ -490,8 +490,9 @@
         initMap();
         socket.on("connected", () => {
           console.log("connected");
-          socket.on("got stat", (stat) => {
-            console.log(stat);
+          socket.on("got stat", (data) => {
+            console.log(data);
+            const stat = data['by_point'];
             [].forEach.call(document.querySelectorAll('.icon'), (el, idx) => {
               el.innerText = `${Math.round(stat[idx.toString()] * 100)}%`
             });
@@ -502,6 +503,24 @@
               }
               values.push(stat[key]);
             }
+            const byType = data['by_type'];
+            for (let key in byType) {
+              if (!byType.hasOwnProperty(key)) {
+                continue;
+              }
+              pieChart.series[0].points[~~key].y = byType[key];
+            }
+            pieChart.render();
+            const historical = data['historical'];
+            const newData = [];
+            for (let key in historical) {
+              if (!historical.hasOwnProperty(key)) {
+                continue;
+              }
+//              lineChart.series[0].data[~~key].y = historical[key];
+              newData.push([~~key, historical[key]]);
+            }
+            lineChart.series[0].setData(newData);
             const avg = values.reduce((memo, m) => {return memo +m }, 0) / values.length;
             console.log(avg, Math.round(avg * (COLORS.length - 1)), COLORS[Math.round(avg * (COLORS.length - 1))], currentPoint);
             drawCircle(map, currentPoint, COLORS[Math.round(avg * (COLORS.length - 1))]);

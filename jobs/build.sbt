@@ -1,6 +1,6 @@
 name := "crimethory"
 
-version := "0.0.10"
+version := "0.0.16"
 
 scalaVersion := "2.10.6"
 
