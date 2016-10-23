@@ -44,3 +44,8 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
+.DS_Store
+jobs/project/
+jobs/target/
+public/.DS_Store
+public/images/.DS_Store
