@@ -281,17 +281,6 @@
     <div class="pie-chart"></div>
     <div class="tweets">
       <blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">Давно не заходил в твиттер. Что тут нового?</p>&mdash; Igor V Churmeev (@Ingvarch) <a href="https://twitter.com/Ingvarch/status/786132890165751808">12 октября 2016 г.</a></blockquote>
-      <blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">Давно не заходил в твиттер. Что тут нового?</p>&mdash; Igor V Churmeev (@Ingvarch) <a href="https://twitter.com/Ingvarch/status/786132890165751808">12 октября 2016 г.</a></blockquote>
-      <blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">Давно не заходил в твиттер. Что тут нового?</p>&mdash; Igor V Churmeev (@Ingvarch) <a href="https://twitter.com/Ingvarch/status/786132890165751808">12 октября 2016 г.</a></blockquote>
-      <blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">Давно не заходил в твиттер. Что тут нового?</p>&mdash; Igor V Churmeev (@Ingvarch) <a href="https://twitter.com/Ingvarch/status/786132890165751808">12 октября 2016 г.</a></blockquote>
-      <blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">Давно не заходил в твиттер. Что тут нового?</p>&mdash; Igor V Churmeev (@Ingvarch) <a href="https://twitter.com/Ingvarch/status/786132890165751808">12 октября 2016 г.</a></blockquote>
-      <blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">Давно не заходил в твиттер. Что тут нового?</p>&mdash; Igor V Churmeev (@Ingvarch) <a href="https://twitter.com/Ingvarch/status/786132890165751808">12 октября 2016 г.</a></blockquote>
-      <blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">Давно не заходил в твиттер. Что тут нового?</p>&mdash; Igor V Churmeev (@Ingvarch) <a href="https://twitter.com/Ingvarch/status/786132890165751808">12 октября 2016 г.</a></blockquote>
-      <blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">Давно не заходил в твиттер. Что тут нового?</p>&mdash; Igor V Churmeev (@Ingvarch) <a href="https://twitter.com/Ingvarch/status/786132890165751808">12 октября 2016 г.</a></blockquote>
-      <blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">Давно не заходил в твиттер. Что тут нового?</p>&mdash; Igor V Churmeev (@Ingvarch) <a href="https://twitter.com/Ingvarch/status/786132890165751808">12 октября 2016 г.</a></blockquote>
-      <blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">Давно не заходил в твиттер. Что тут нового?</p>&mdash; Igor V Churmeev (@Ingvarch) <a href="https://twitter.com/Ingvarch/status/786132890165751808">12 октября 2016 г.</a></blockquote>
-      <blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">Давно не заходил в твиттер. Что тут нового?</p>&mdash; Igor V Churmeev (@Ingvarch) <a href="https://twitter.com/Ingvarch/status/786132890165751808">12 октября 2016 г.</a></blockquote>
-      <blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">Давно не заходил в твиттер. Что тут нового?</p>&mdash; Igor V Churmeev (@Ingvarch) <a href="https://twitter.com/Ingvarch/status/786132890165751808">12 октября 2016 г.</a></blockquote>
     </div>
     <input type="text" class="search" placeholder="Поиск" autofocus />
     <div class="slider-container">
@@ -524,14 +513,51 @@
             const avg = values.reduce((memo, m) => {return memo +m }, 0) / values.length;
             console.log(avg, Math.round(avg * (COLORS.length - 1)), COLORS[Math.round(avg * (COLORS.length - 1))], currentPoint);
             drawCircle(map, currentPoint, COLORS[Math.round(avg * (COLORS.length - 1))]);
-            document.querySelector('.splash-screen').style.marginTop = '100%';
+            document.querySelector('.splash-screen').style.marginTop = '150%';
             hideSpinner();
+          });
+          socket.on("new tweet", (tweet) => {
+//            const elementString = `<blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">${tweet[0]}</p>&mdash; ${tweet[1]} (@${tweet[2]}) <a href="https://twitter.com/${tweet[2]}/status/${tweet[3]}">${new Date().toLocaleString()}</a></blockquote>`
+//            const div = document.createElement('div');
+//            div.innerHTML = elementString;
+//            document.querySelector('.tweets').insertBefore(div, document.querySelector('.tweets'));
+//            document.querySelector('.tweets').innerHTML = elementString + document.querySelector('.tweets').innerHTML;
+//            twttr.widgets.load();
+//            const el = document.querySelector("twitterwidget");
+//            const newEl = el.cloneNode(true);
+//            newEl.querySelector('.Avatar').setAttribute('src', tweet[4]);
+//            newEl.querySelector('.TweetAuthor-name').innerText = tweet[1];
+//            newEl.querySelector('.TweetAuthor-screenName').innerText = tweet[2];
+//            newEl.querySelector('.Tweet-text').innerText = tweet[0];
+//            newEl.querySelector('.dt-updated').innerText = new Date().toLocaleString();
+
+//            el.parentNode.insertBefore(newEl, el);
+            twttr.widgets.createTweet(
+                    tweet[3],
+                    document.querySelector('.tweets')
+            ).then((a) => { console.log(a) }).catch((r) => { console.error(r) });
           });
           getStat();
         });
       });
     </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxff4cnltkHkbBZYzEiRcsxjsoQqWLle0&libraries=places"></script>
-    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <!--<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>-->
+    <script>window.twttr = (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0],
+              t = window.twttr || {};
+      if (d.getElementById(id)) return t;
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "https://platform.twitter.com/widgets.js";
+      fjs.parentNode.insertBefore(js, fjs);
+
+      t._e = [];
+      t.ready = function(f) {
+        t._e.push(f);
+      };
+
+      return t;
+    }(document, "script", "twitter-wjs"));</script>
   </body>
 </html>

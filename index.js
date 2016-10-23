@@ -33,14 +33,18 @@ io.on('connection', (socket) => {
             let result;
             try {
                 result = JSON.parse(message.toString());
-            } catch (exc) {
-                console.error(exc);
-            }
-            if (result && result['request'] && runningJobs[result['request']['external_id']] === socket) {
-                if (result['success']) {
-                    socket.emit("got stat", result["payload"]);
+                if (result && result['request'] && runningJobs[result['request']['external_id']] === socket) {
+                    if (result['success']) {
+                        socket.emit("got stat", result["payload"]);
+                    }
+                    delete runningJobs[result['request']['external_id']];
                 }
-                delete runningJobs[result['request']['external_id']];
+            } catch (exc) {
+                if (message.toString().startsWith('[NEW TWEET]')) {
+                    const tweet = message.toString().match(/\[NEW TWEET\]\[\[(.*?)\]\]\[\[(.*?)\]\]\[\[(.*?)\]\]\[\[(.*?)\]\]\[\[(.*?)\]\]/).slice(1);
+                    console.log("new tweet: ", tweet);
+                    socket.emit("new tweet", tweet);
+                }
             }
         }
     });
