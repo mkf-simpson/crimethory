@@ -4,7 +4,7 @@
     <title>Crimethory</title>
     <link rel="stylesheet" href="/css/foundation.css">
     <link rel="stylesheet" href="/css/app.css">
-    <link href="https://fonts.googleapis.com/css?family=Proza+Libre" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato|Lobster" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.highcharts.com/highcharts.js"></script>
     <style>
@@ -240,10 +240,38 @@
       .ufo {
         background-image: url(/images/ufo.svg);
       }
+
+      .splash-screen {
+        background-color: rgba(156,39,176,1);
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 10;
+
+      }
+
+      .logo {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 120px;
+        font-family: Lobster, sans-serif;
+        margin-top: 0;
+        transition: margin-top 2s;
+      }
     </style>
   </head>
 
   <body>
+    <div class="splash-screen">
+      <div class="logo">
+        Crimethory
+      </div>
+    </div>
     <div class="row">
       <div class="map-container"></div>
     </div>
@@ -438,6 +466,9 @@
             lastMouseX = event.pageX;
           }
         });
+        setTimeout(() => {
+          document.querySelector('.splash-screen').style.marginTop = '100%'
+        }, 3000);
       });
     </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxff4cnltkHkbBZYzEiRcsxjsoQqWLle0&callback=initMap&libraries=places"></script>
