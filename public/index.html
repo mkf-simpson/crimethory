@@ -6,11 +6,15 @@
     <link rel="stylesheet" href="/css/app.css">
     <link href="https://fonts.googleapis.com/css?family=Proza+Libre" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
     <style>
       html, body {
         margin: 0;
         padding: 0;
         height: 100%;
+      }
+      .no-pointer-events {
+        pointer-events: none;
       }
       .row {
         height: 100%;
@@ -139,9 +143,104 @@
         /*display: none;*/
       }
 
+      .slider-container {
+        position: absolute;
+        bottom: 30px;
+        width: 42%;
+        left: 50%;
+        transform: translate(-50%);
+        z-index: 3;
+      }
 
+      .slider-line {
+        width: 100%;
+        height: 7px;
+        border: 1px solid black;
+        background-color: white;
+        border-radius: 5px;
+      }
+
+      .slider-button {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 30px;
+        height: 30px;
+        background-color: rgba(255,87,34 ,1);
+        border-radius: 50%;
+        border: 1px solid black;
+        cursor: pointer;
+      }
+
+      .slider-button-tooltip {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        background-color: black;
+        color: white;
+        padding: 3px;
+        border-radius: 7px;
+        transform: translate(-50%, -130%);
+      }
+
+      .slider-button-tooltip:after {
+        content: "";
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 10px solid black;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 90%;
+      }
+
+      .crimes {
+        position: absolute;
+        width: 25%;
+        /*height: 10%;*/
+        border: 1px solid #787878;
+        background-color: white;
+        top: calc(35% + 60px);
+        bottom: calc(35% + 60px);
+        left: 30px;
+        border-radius: 5px;
+        opacity: 0.8;
+        overflow: auto;
+        z-index: 3;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+      }
+
+      .icon {
+        width: 50px;
+        height: 50px;
+        background-repeat: no-repeat;
+      }
+
+      .gun {
+        background-image: url(/images/gun.svg);
+      }
+
+      .stealing {
+        background-image: url(/images/stealing.svg);
+      }
+
+      .rape {
+        background-image: url(/images/rape.svg);
+      }
+
+      .stealing_car {
+        background-image: url(/images/stealing_car.svg);
+      }
+
+      .ufo {
+        background-image: url(/images/ufo.svg);
+      }
     </style>
-
   </head>
 
   <body>
@@ -165,13 +264,44 @@
       <blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">Давно не заходил в твиттер. Что тут нового?</p>&mdash; Igor V Churmeev (@Ingvarch) <a href="https://twitter.com/Ingvarch/status/786132890165751808">12 октября 2016 г.</a></blockquote>
     </div>
     <input type="text" class="search" placeholder="Поиск" autofocus />
+    <div class="slider-container">
+      <div class="slider-line"></div>
+      <div class="slider-button" style="margin-left: 0">
+        <div class="slider-button-tooltip">
+          10.2016
+        </div>
+      </div>
+    </div>
     <div class="overlay" style="opacity: 0; z-index: 1;">
       <div class="spinner">
         <div class="cube1"></div>
         <div class="cube2"></div>
       </div>
     </div>
+    <div class="crimes">
+      <div class="icon gun"></div>
+      <div class="icon stealing"></div>
+      <div class="icon rape"></div>
+      <div class="icon stealing_car"></div>
+      <div class="icon ufo"></div>
+    </div>
     <script>
+
+      const COLORS = ['#FF0000', '#00FF00', '#FFFF00'];
+
+      function drawCircle(map, point, color) {
+        var cityCircle = new google.maps.Circle({
+          strokeColor: '#FF0000',
+          strokeOpacity: 0.8,
+          strokeWeight: 0,
+          fillColor: color,
+          fillOpacity: 0.35,
+          map: map,
+          center: point,
+          radius: 500
+        });
+      }
+
       function initMap() {
         var uluru = {lat: 55.757972, lng: 37.599507};
         var map = new google.maps.Map(document.querySelector('.map-container'), {
@@ -182,6 +312,7 @@
           position: uluru,
           map: map
         });
+        drawCircle(map, uluru, COLORS[Math.round(Math.random() * (COLORS.length - 1))]);
         marker.setMap(map);
         new google.maps.places.Autocomplete(document.querySelector(".search"), { types: ['geocode'] }).addListener('place_changed', function () {
           var marker = new google.maps.Marker({
@@ -190,6 +321,7 @@
           });
           marker.setMap(map);
           map.setCenter(this.getPlace().geometry.location);
+          drawCircle(map, this.getPlace().geometry.location, COLORS[Math.round(Math.random() * (COLORS.length - 1))]);
         });
       }
 
@@ -205,10 +337,106 @@
         el.style.opacity = ~~!~~el.style.opacity;
       }
 
+      function meaninglessZero(number) {
+        return `0${number}`.substr(-2);
+      }
+
+      lineChart = new Highcharts.Chart({
+        chart: {
+          renderTo: document.querySelector('.line-chart'),
+          type: 'spline'
+        },
+        title: null,
+        series: [{
+          data: [[1,2], [2, 3], [3, 6], [4, 8], [5, 5]],
+          showInLegend: false,
+          lineWidth: 5
+        }],
+        xAxis: {
+          labels: {
+            enabled: false
+          },
+          minorTickLength: 0,
+          tickLength: 0,
+          visible: false
+        },
+        yAxis: {
+          labels: {
+            enabled: false
+          },
+          minorTickLength: 0,
+          tickLength: 0,
+          visible: false
+        }
+      });
+
+      pieChart = new Highcharts.Chart({
+        chart: {
+          renderTo: document.querySelector('.pie-chart'),
+          type: 'pie'
+        },
+        title: null,
+        series: [{
+          data: [{
+            name: "Убийство",
+            y: 2
+          },{
+            name: "Изнасилование",
+            y: 8
+          },{
+            name: "Угон",
+            y: 3
+          },{
+            name: "Грабёж",
+            y: 2
+          },{
+            name: "НЛО",
+            y: 8
+          }]
+        }]
+      });
+
       window.addEventListener("load", () => {
         var socket = io();
         socket.on("mqtt message", (msg) => {
           console.log(msg);
+        });
+
+        let pressed = false;
+        let lastMouseX = 0;
+        let button = document.querySelector('.slider-button');
+        let slider = document.querySelector('.slider-line');
+        let currentMonth = new Date().getMonth() + 1;
+        let currentYear = new Date().getFullYear();
+        let currentDate = [currentMonth, currentYear];
+        button.addEventListener('mousedown', (event) => {
+          pressed = true;
+          lastMouseX = event.pageX;
+          document.body.classList.add('no-pointer-events');
+        });
+        document.addEventListener('mouseup', (event) => {
+          pressed = false;
+          document.body.classList.remove('no-pointer-events');
+        });
+        document.addEventListener('mousemove', (event) => {
+          if (pressed) {
+            const lineRect = slider.getBoundingClientRect();
+            const delta = lastMouseX - event.pageX;
+            button.style.marginLeft = `${parseInt(button.style.marginLeft) - delta}px`;
+            let buttonRect = button.getBoundingClientRect();
+            if (buttonRect.left + buttonRect.width / 2 < lineRect.left) {
+              button.style.marginLeft = `-${lineRect.width / 2}px`;
+            }
+            if (buttonRect.right - buttonRect.width / 2 > lineRect.right) {
+              button.style.marginLeft = `${lineRect.width / 2}px`;
+            }
+            buttonRect = button.getBoundingClientRect();
+            const part = ~~((buttonRect.left + buttonRect.width / 2 - lineRect.left) / lineRect.width * 7 - 3.5);
+            currentDate[0] = (currentMonth + part);
+            currentDate[1] = currentYear + ~~((currentDate[0] - 1) / 12);
+            button.querySelector(".slider-button-tooltip").innerText = `${meaninglessZero(currentDate[0] == 12 ? 12 : currentDate[0] % 12)}.${currentDate[1]}`;
+            lastMouseX = event.pageX;
+          }
         });
       });
     </script>
