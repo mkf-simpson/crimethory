@@ -4,8 +4,8 @@ import scala.math.BigInt
 object CrimeByPoint extends MistJob {
 
     def doStuff(parameters: Map[String, Any]): Map[String, Any] = {
-        val lat = parameters("lat").asInstanceOf[BigInt].doubleValue
-        val lng = parameters("lng").asInstanceOf[BigInt].doubleValue
+        val lat = parameters("lat").asInstanceOf[String].toDouble
+        val lng = parameters("lng").asInstanceOf[String].toDouble
         val month = parameters("month").asInstanceOf[BigInt].intValue
 
         val initialK = Array(2, 5, 4, 3, 1)

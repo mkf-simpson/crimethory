@@ -219,6 +219,8 @@
         width: 50px;
         height: 50px;
         background-repeat: no-repeat;
+        padding-top: 50px;
+        text-align: center;
       }
 
       .gun {
@@ -315,128 +317,146 @@
     </div>
     <script>
 
-      const COLORS = ['#FF0000', '#00FF00', '#FFFF00'];
-
-      function drawCircle(map, point, color) {
-        var cityCircle = new google.maps.Circle({
-          strokeColor: '#FF0000',
-          strokeOpacity: 0.8,
-          strokeWeight: 0,
-          fillColor: color,
-          fillOpacity: 0.35,
-          map: map,
-          center: point,
-          radius: 500
-        });
-      }
-
-      function initMap() {
-        var uluru = {lat: 55.757972, lng: 37.599507};
-        var map = new google.maps.Map(document.querySelector('.map-container'), {
-          zoom: 15,
-          center: uluru
-        });
-        var marker = new google.maps.Marker({
-          position: uluru,
-          map: map
-        });
-        drawCircle(map, uluru, COLORS[Math.round(Math.random() * (COLORS.length - 1))]);
-        marker.setMap(map);
-        new google.maps.places.Autocomplete(document.querySelector(".search"), { types: ['geocode'] }).addListener('place_changed', function () {
-          var marker = new google.maps.Marker({
-            position: this.getPlace().geometry.location,
-            title: this.getPlace().name
-          });
-          marker.setMap(map);
-          map.setCenter(this.getPlace().geometry.location);
-          drawCircle(map, this.getPlace().geometry.location, COLORS[Math.round(Math.random() * (COLORS.length - 1))]);
-        });
-      }
-
-
-      function showOrHideSpinner() {
-        const el = document.querySelector('.overlay');
-        if (el.style.zIndex === 5) {
-          el.style.zIndex = 1;
-        } else {
-          el.style.zIndex = 5;
-        }
-
-        el.style.opacity = ~~!~~el.style.opacity;
-      }
-
-      function meaninglessZero(number) {
-        return `0${number}`.substr(-2);
-      }
-
-      lineChart = new Highcharts.Chart({
-        chart: {
-          renderTo: document.querySelector('.line-chart'),
-          type: 'spline'
-        },
-        title: null,
-        series: [{
-          data: [[1,2], [2, 3], [3, 6], [4, 8], [5, 5]],
-          showInLegend: false,
-          lineWidth: 5
-        }],
-        xAxis: {
-          labels: {
-            enabled: false
-          },
-          minorTickLength: 0,
-          tickLength: 0,
-          visible: false
-        },
-        yAxis: {
-          labels: {
-            enabled: false
-          },
-          minorTickLength: 0,
-          tickLength: 0,
-          visible: false
-        }
-      });
-
-      pieChart = new Highcharts.Chart({
-        chart: {
-          renderTo: document.querySelector('.pie-chart'),
-          type: 'pie'
-        },
-        title: null,
-        series: [{
-          data: [{
-            name: "Убийство",
-            y: 2
-          },{
-            name: "Изнасилование",
-            y: 8
-          },{
-            name: "Угон",
-            y: 3
-          },{
-            name: "Грабёж",
-            y: 2
-          },{
-            name: "НЛО",
-            y: 8
-          }]
-        }]
-      });
-
       window.addEventListener("load", () => {
-        var socket = io();
-        socket.on("mqtt message", (msg) => {
-          console.log(msg);
+        window.socket = io();
+
+        const COLORS = ['#00FF00', '#FFFF00', '#FF0000'];
+
+        let currentMonth = new Date().getMonth() + 1;
+        let currentYear = new Date().getFullYear();
+        let currentDate = [currentMonth, currentYear];
+
+        var uluru = {lat: 55.757972, lng: 37.599507};
+        let currentPoint = uluru;
+        var cityCircle = null;
+
+        function drawCircle(map, point, color) {
+          if (cityCircle !== null) {
+            cityCircle.setMap(null);
+          }
+          cityCircle = new google.maps.Circle({
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 0,
+            fillColor: color,
+            fillOpacity: 0.35,
+            map: map,
+            center: point,
+            radius: 500
+          });
+        }
+
+        function getStat() {
+          showSpinner();
+          socket.emit("get stat", {
+            lat: currentPoint.lat,
+            lng: currentPoint.lng,
+            month: currentDate[0]
+          });
+        }
+
+        window.initMap = function() {
+
+          window.map = new google.maps.Map(document.querySelector('.map-container'), {
+            zoom: 15,
+            center: uluru
+          });
+          var marker = new google.maps.Marker({
+            position: uluru,
+            map: map
+          });
+          drawCircle(map, uluru, COLORS[Math.round(Math.random() * (COLORS.length - 1))]);
+          marker.setMap(map);
+          new google.maps.places.Autocomplete(document.querySelector(".search"), { types: ['geocode'] }).addListener('place_changed', function () {
+            var marker = new google.maps.Marker({
+              position: this.getPlace().geometry.location,
+              title: this.getPlace().name
+            });
+            currentPoint = {
+              lat: this.getPlace().geometry.location.lat(),
+              lng: this.getPlace().geometry.location.lng()
+            };
+            marker.setMap(map);
+            map.setCenter(this.getPlace().geometry.location);
+            getStat();
+          });
+        };
+
+        function showSpinner() {
+          const el = document.querySelector('.overlay');
+          el.style.zIndex = 5;
+          el.style.opacity = 1;
+        }
+
+        function hideSpinner() {
+          const el = document.querySelector('.overlay');
+          el.style.zIndex = 1;
+          el.style.opacity = 0;
+        }
+
+        function meaninglessZero(number) {
+          return `0${number}`.substr(-2);
+        }
+
+        lineChart = new Highcharts.Chart({
+          chart: {
+            renderTo: document.querySelector('.line-chart'),
+            type: 'spline'
+          },
+          title: null,
+          series: [{
+            data: [[1,2], [2, 3], [3, 6], [4, 8], [5, 5]],
+            showInLegend: false,
+            lineWidth: 5
+          }],
+          xAxis: {
+            labels: {
+              enabled: false
+            },
+            minorTickLength: 0,
+            tickLength: 0,
+            visible: false
+          },
+          yAxis: {
+            labels: {
+              enabled: false
+            },
+            minorTickLength: 0,
+            tickLength: 0,
+            visible: false
+          }
+        });
+
+        pieChart = new Highcharts.Chart({
+          chart: {
+            renderTo: document.querySelector('.pie-chart'),
+            type: 'pie'
+          },
+          title: null,
+          series: [{
+            data: [{
+              name: "Убийство",
+              y: 2
+            },{
+              name: "Изнасилование",
+              y: 8
+            },{
+              name: "Угон",
+              y: 3
+            },{
+              name: "Грабёж",
+              y: 2
+            },{
+              name: "НЛО",
+              y: 8
+            }]
+          }]
         });
 
         let pressed = false;
         let lastMouseX = 0;
         let button = document.querySelector('.slider-button');
         let slider = document.querySelector('.slider-line');
-        let currentMonth = new Date().getMonth() + 1;
-        let currentYear = new Date().getFullYear();
-        let currentDate = [currentMonth, currentYear];
         button.addEventListener('mousedown', (event) => {
           pressed = true;
           lastMouseX = event.pageX;
@@ -445,6 +465,7 @@
         document.addEventListener('mouseup', (event) => {
           pressed = false;
           document.body.classList.remove('no-pointer-events');
+          getStat();
         });
         document.addEventListener('mousemove', (event) => {
           if (pressed) {
@@ -466,12 +487,32 @@
             lastMouseX = event.pageX;
           }
         });
-        setTimeout(() => {
-          document.querySelector('.splash-screen').style.marginTop = '100%'
-        }, 3000);
+        initMap();
+        socket.on("connected", () => {
+          console.log("connected");
+          socket.on("got stat", (stat) => {
+            console.log(stat);
+            [].forEach.call(document.querySelectorAll('.icon'), (el, idx) => {
+              el.innerText = `${Math.round(stat[idx.toString()] * 100)}%`
+            });
+            const values = [];
+            for (let key in stat) {
+              if (!stat.hasOwnProperty(key)) {
+                continue;
+              }
+              values.push(stat[key]);
+            }
+            const avg = values.reduce((memo, m) => {return memo +m }, 0) / values.length;
+            console.log(avg, Math.round(avg * (COLORS.length - 1)), COLORS[Math.round(avg * (COLORS.length - 1))], currentPoint);
+            drawCircle(map, currentPoint, COLORS[Math.round(avg * (COLORS.length - 1))]);
+            document.querySelector('.splash-screen').style.marginTop = '100%';
+            hideSpinner();
+          });
+          getStat();
+        });
       });
     </script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxff4cnltkHkbBZYzEiRcsxjsoQqWLle0&callback=initMap&libraries=places"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxff4cnltkHkbBZYzEiRcsxjsoQqWLle0&libraries=places"></script>
     <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
   </body>
 </html>
