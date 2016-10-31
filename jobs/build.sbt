@@ -1,12 +1,16 @@
 name := "crimethory"
 
-version := "0.0.16"
+version := "0.0.17"
 
-scalaVersion := "2.10.6"
+scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
-    "io.hydrosphere" %% "mist-oldspark" % "0.5.0",
-    "org.apache.spark" %% "spark-core" % "1.6.2",
-    "org.apache.spark" %% "spark-sql" % "1.6.2",
-    "org.apache.spark" %% "spark-hive" % "1.6.2"
+    "io.hydrosphere" %% "mist" % "0.6.0",
+    "org.apache.spark" %% "spark-core" % "2.0.0",
+    "org.apache.spark" %% "spark-sql" % "2.0.0",
+    "org.apache.spark" %% "spark-hive" % "2.0.0",
+    "org.apache.spark" %% "spark-mllib" % "2.0.0",
+    "org.apache.spark" %% "spark-streaming" % "2.0.0",
+    "org.apache.spark" %% "spark-streaming-twitter" % "1.6.2"
+
 )

@@ -52,8 +52,8 @@ io.on('connection', (socket) => {
     socket.on('get stat', ({ lat, lng, month }) => {
         const uid = uuid.v1();
         const request = {
-            path: "/jobs/crimethory_2.10-0.0.16.jar",
-            className: "CrimeByPoint$",
+            path: "/jobs/crimethory_2.10-0.0.17.jar",
+            className: "CrimeByPointNeuro$",
             namespace: "crime-requested-jobs",
             parameters: {
                 lat: lat.toFixed(4),
