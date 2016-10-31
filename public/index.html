@@ -281,7 +281,7 @@
     <div class="line-chart"></div>
     <div class="pie-chart"></div>
     <div class="tweets">
-      <blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">АААА! Меня насилуют! <a href="https://twitter.com/mvd_official">@mvd_official</a> <a href="https://twitter.com/hashtag/crimethory?src=hash">#crimethory</a> <a href="https://twitter.com/hashtag/crimestathack?src=hash">#crimestathack</a></p>&mdash; Konstantin (@mkf_simpson) <a href="https://twitter.com/mkf_simpson/status/790171893416493056">23 октября 2016 г.</a></blockquote>
+      <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">АААА! Меня насилуют! <a href="https://twitter.com/mvd_official">@mvd_official</a> <a href="https://twitter.com/hashtag/crimethory?src=hash">#crimethory</a> <a href="https://twitter.com/hashtag/crimestathack?src=hash">#crimestathack</a></p>&mdash; Konstantin (@mkf_simpson) <a href="https://twitter.com/mkf_simpson/status/790171893416493056">23 октября 2016 г.</a></blockquote>
       <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
     </div>
     <input type="text" class="search" placeholder="Поиск" autofocus />
@@ -289,7 +289,7 @@
       <div class="slider-line"></div>
       <div class="slider-button" style="margin-left: 0">
         <div class="slider-button-tooltip">
-          10.2016
+          11.2016
         </div>
       </div>
     </div>
@@ -426,19 +426,19 @@
           title: null,
           series: [{
             data: [{
-              name: "Убийство",
+              name: "Murder",
               y: 2
             },{
-              name: "Изнасилование",
+              name: "Rape",
               y: 8
             },{
-              name: "Угон",
+              name: "Carjacking",
               y: 3
             },{
-              name: "Грабёж",
+              name: "Robbery",
               y: 2
             },{
-              name: "НЛО",
+              name: "UFO",
               y: 8
             }]
           }]
@@ -508,7 +508,6 @@
               if (!historical.hasOwnProperty(key)) {
                 continue;
               }
-//              lineChart.series[0].data[~~key].y = historical[key];
               newData.push([~~key, historical[key]]);
             }
             lineChart.series[0].setData(newData);
@@ -519,21 +518,6 @@
             hideSpinner();
           });
           socket.on("new tweet", (tweet) => {
-//            const elementString = `<blockquote class="twitter-tweet" data-lang="ru"><p lang="ru" dir="ltr">${tweet[0]}</p>&mdash; ${tweet[1]} (@${tweet[2]}) <a href="https://twitter.com/${tweet[2]}/status/${tweet[3]}">${new Date().toLocaleString()}</a></blockquote>`
-//            const div = document.createElement('div');
-//            div.innerHTML = elementString;
-//            document.querySelector('.tweets').insertBefore(div, document.querySelector('.tweets'));
-//            document.querySelector('.tweets').innerHTML = elementString + document.querySelector('.tweets').innerHTML;
-//            twttr.widgets.load();
-//            const el = document.querySelector("twitterwidget");
-//            const newEl = el.cloneNode(true);
-//            newEl.querySelector('.Avatar').setAttribute('src', tweet[4]);
-//            newEl.querySelector('.TweetAuthor-name').innerText = tweet[1];
-//            newEl.querySelector('.TweetAuthor-screenName').innerText = tweet[2];
-//            newEl.querySelector('.Tweet-text').innerText = tweet[0];
-//            newEl.querySelector('.dt-updated').innerText = new Date().toLocaleString();
-
-//            el.parentNode.insertBefore(newEl, el);
             twttr.widgets.createTweet(
                     tweet[3],
                     document.querySelector('.tweets')
@@ -544,7 +528,6 @@
       });
     </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxff4cnltkHkbBZYzEiRcsxjsoQqWLle0&libraries=places"></script>
-    <!--<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>-->
     <script>window.twttr = (function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0],
               t = window.twttr || {};
