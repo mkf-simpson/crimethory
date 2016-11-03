@@ -457,9 +457,11 @@
           document.body.classList.add('no-pointer-events');
         });
         document.addEventListener('mouseup', (event) => {
-          pressed = false;
-          document.body.classList.remove('no-pointer-events');
-          getStat();
+          if (pressed) {
+            pressed = false;
+            document.body.classList.remove('no-pointer-events');
+            getStat();
+          }
         });
         document.addEventListener('mousemove', (event) => {
           if (pressed) {
