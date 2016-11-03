@@ -10,9 +10,6 @@ import io.circe.syntax._
 
 
 object CrimeTwitter extends MistJob with MQTTPublisher {
-
-  case class Tweet(text: String, screenName: String, name: String, id: Long, imageURL: String)
-
   /** Contains implementation of spark job with ordinary [[org.apache.spark.SparkContext]]
     * Abstract method must be overridden
     *
@@ -25,6 +22,8 @@ object CrimeTwitter extends MistJob with MQTTPublisher {
     val ssc = new StreamingContext(context, Seconds(30))
     val stream = TwitterUtils.createStream(ssc, None, Array("#crimethory"))
     stream.foreachRDD { (rdd) =>
+      case class Tweet(text: String, screenName: String, name: String, id: Long, imageURL: String)
+
       val collected = rdd.collect()
       val tweets = collected.map({(x) => Tweet(x.getText, x.getUser.getScreenName, x.getUser.getName, x.getId, x.getUser.getOriginalProfileImageURL)})
       tweets.foreach { (x) =>
