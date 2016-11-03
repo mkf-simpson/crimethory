@@ -28,9 +28,9 @@ object CrimeTwitter extends MistJob with MQTTPublisher {
       val collected = rdd.collect()
       val tweets = collected.map({(x) => Tweet(x.getText, x.getUser.getScreenName, x.getUser.getName, x.getId, x.getUser.getOriginalProfileImageURL)})
       tweets.foreach { (x) =>
-        val str = x.asJson.noSpaces
-        println(str)
-        publish(str)
+//        val str = x.asJson.noSpaces
+        println(x)
+//        publish(str)
       }
     }
 
