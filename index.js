@@ -23,13 +23,13 @@ io.on('connection', (socket) => {
     console.log(`New client: ${socket.id}`);
     client.on('connect', function () {
         console.log("connected to mqtt");
-        client.subscribe('foo');
+        client.subscribe('crimethory');
         socket.emit('connected');
     });
 
     client.on('message', function (topic, message) {
         console.log(topic, message.toString());
-        if (topic === 'foo') {
+        if (topic === 'crimethory') {
             let result;
             try {
                 result = JSON.parse(message.toString());
@@ -64,7 +64,7 @@ io.on('connection', (socket) => {
         };
         runningJobs[uid] = socket;
         setTimeout(() => {
-            client.publish("foo", JSON.stringify(request));
+            client.publish("crimethory", JSON.stringify(request));
         }, 1000);
     });
 });
