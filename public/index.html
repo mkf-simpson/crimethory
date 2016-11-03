@@ -363,13 +363,16 @@
               position: this.getPlace().geometry.location,
               title: this.getPlace().name
             });
+            const oldPoint = {lat: currentPoint.lat, lng: currentPoint.lng};
             currentPoint = {
               lat: this.getPlace().geometry.location.lat(),
               lng: this.getPlace().geometry.location.lng()
             };
             marker.setMap(map);
             map.setCenter(this.getPlace().geometry.location);
-            getStat();
+            if (oldPoint.lat != currentPoint.lat || oldPoint.lng != currentPoint.lng) {
+              getStat();
+            }
           });
         };
 
