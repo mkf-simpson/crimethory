@@ -52,7 +52,7 @@ io.on('connection', (socket) => {
     socket.on('get stat', ({ lat, lng, month }) => {
         const uid = uuid.v1();
         const request = {
-            path: "/jobs/crimethory_2.10-0.0.18.jar",
+            path: "/jobs/crimethory_2.11-0.0.18.jar",
             className: "CrimeByPointNeuro$",
             namespace: "crime-requested-jobs",
             parameters: {
