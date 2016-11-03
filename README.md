@@ -42,3 +42,5 @@ docker build -t crimethory:latest .
 docker run -p 3000:3000 -d --name crimethory --link crimethory-mosquitto:mosquitto crimethory:latest npm
 
 ```
+
+### Tweet something with #crimethory hashtag
