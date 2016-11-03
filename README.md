@@ -43,4 +43,4 @@ docker run -p 3000:3000 -d --name crimethory --link crimethory-mosquitto:mosquit
 
 ```
 
-### Tweet something with #crimethory hashtag
+### Tweet something with [https://twitter.com/search?f=tweets&vertical=default&q=%23crimethory](#crimethory) hashtag
