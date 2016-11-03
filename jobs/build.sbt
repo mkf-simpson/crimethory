@@ -4,6 +4,13 @@ version := "0.0.18"
 
 scalaVersion := "2.11.8"
 
+mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
+   {
+    case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+    case x => MergeStrategy.first
+   }
+}
+
 libraryDependencies ++= Seq(
     "io.hydrosphere" %% "mist" % "0.6.2",
     "org.apache.spark" %% "spark-core" % "2.0.0",
