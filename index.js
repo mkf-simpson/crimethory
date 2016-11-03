@@ -63,8 +63,6 @@ io.on('connection', (socket) => {
             external_id: uid
         };
         runningJobs[uid] = socket;
-        setTimeout(() => {
-            client.publish("crimethory", JSON.stringify(request));
-        }, 1000);
+        client.publish("crimethory", JSON.stringify(request));
     });
 });
