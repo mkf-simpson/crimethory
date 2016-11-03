@@ -519,9 +519,11 @@
           });
           socket.on("new tweet", (tweet) => {
             twttr.widgets.createTweet(
-                    tweet[3],
+                    tweet['id'],
                     document.querySelector('.tweets')
-            ).then((a) => { console.log(a) }).catch((r) => { console.error(r) });
+            ).then((a) => {
+              a.parentNode.insertBefore(a, a.parentNode.childNodes[0];
+            }).catch((r) => { console.error(r) });
           });
           getStat();
         });
