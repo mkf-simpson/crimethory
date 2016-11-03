@@ -39,12 +39,12 @@ io.on('connection', (socket) => {
                     }
                     delete runningJobs[result['request']['external_id']];
                 }
-            } catch (exc) {
-                if (message.toString().startsWith('[NEW TWEET]')) {
-                    const tweet = message.toString().match(/\[NEW TWEET\]\[\[(.*?)\]\]\[\[(.*?)\]\]\[\[(.*?)\]\]\[\[(.*?)\]\]\[\[(.*?)\]\]/).slice(1);
-                    console.log("new tweet: ", tweet);
-                    socket.emit("new tweet", tweet);
+                if (result && result['text'] && result['id']) {
+                    console.log("new tweet: ", result);
+                    socket.emit("new tweet", result);
                 }
+            } catch (exc) {
+                console.error("error while parsing json from mqtt: ", exc);
             }
         }
     });
