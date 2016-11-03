@@ -49,3 +49,4 @@ jobs/project/
 jobs/target/
 public/.DS_Store
 public/images/.DS_Store
+target
