@@ -5,7 +5,7 @@ version := "0.0.18"
 scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
-    "io.hydrosphere" %% "mist" % "0.6.2",
+    "io.hydrosphere" %% "mist" % "0.6.3",
     "org.apache.spark" %% "spark-core" % "2.0.0",
     "org.apache.spark" %% "spark-sql" % "2.0.0",
     "org.apache.spark" %% "spark-hive" % "2.0.0",
