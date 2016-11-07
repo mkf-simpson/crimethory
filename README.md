@@ -9,7 +9,7 @@ cd ..
 ### Run MQTT server
 
 ```sh
-docker run docker run --name crimethory-mosquitto -d ansi/mosquitto
+docker run --name crimethory-mosquitto -d ansi/mosquitto
 ```
 
 ### Run Mist
