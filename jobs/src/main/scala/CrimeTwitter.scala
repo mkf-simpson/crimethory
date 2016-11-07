@@ -6,12 +6,6 @@ import org.apache.spark.streaming.twitter._
 import twitter4j.Status
 
 object CrimeTwitter extends MistJob with MQTTPublisher {
-  /** Contains implementation of spark job with ordinary [[org.apache.spark.SparkContext]]
-    * Abstract method must be overridden
-    *
-    * @param parameters user parameters
-    * @return result of the job
-    */
   override def doStuff(parameters: Map[String, Any]): Map[String, Any] = {
     context.setLogLevel("INFO")
 
@@ -22,9 +16,12 @@ object CrimeTwitter extends MistJob with MQTTPublisher {
       var idx = 0
       while (idx < collected.length) {
         val x = collected(idx)
-        val str = s"""{"text": "${x.getText}", "screenName": "${x.getUser.getScreenName}", "name": "${x.getUser.getName}", "id": "${x.getId}"}"""
-        publish(str)
-        println(str)
+        publish(Map(
+          "text" -> x.getText,
+          "screenName" -> s.getUser.getScreenName,
+          "name" -> s.getUser.getName,
+          "id" -> x.getId
+        ))
         idx += 1
       }
     }
