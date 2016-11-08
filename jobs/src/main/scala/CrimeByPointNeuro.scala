@@ -22,8 +22,8 @@ object CrimeByPointNeuro extends MistJob with SQLSupport {
       val predictedCrime = prediction.select("prediction").head()
       if (predictedCrime.size > 0)
         println("crime: ", predictedCrime.toString)
+      val crimePoint = 0.5 * (predictedCrime(0).toString.toDouble / 30.0 + scala.math.abs(scala.math.cos((lat + lon + month) * x) + scala.math.cos((lat + lon + month) * x * 2) + scala.math.cos((lat + lon + month) * x * 3)))
 
-      val crimePoint = predictedCrime(0).toString.toDouble / 30.0
       crimePoint
     }
     else 0.0
