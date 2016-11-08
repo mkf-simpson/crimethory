@@ -11,15 +11,15 @@ object CrimeTeacher extends MistJob with SQLSupport {
     val context = session.sparkContext
 
     var crimeCollection = collection.mutable.ArrayBuffer[(Double, org.apache.spark.ml.linalg.Vector)]()
-    for (iter <- 1 to 5) {
-      for (geo <- 1 to 999) {
+
+      for (geo <- 1 to 300) {
         for (x <- 1 to 10) {
           for (monthT <- 1 to 12) {
-            crimeCollection += (((scala.math.abs(scala.math.cos((monthT) * x) + scala.math.cos((monthT) * x * 2) + scala.math.cos((monthT) * x * 3)) * 10).toInt.toDouble, Vectors.dense(monthT.toDouble / 12.0, x.toDouble / 10.0, geo.toDouble / 1000.0)))
+            crimeCollection += (((scala.math.abs(scala.math.cos((monthT) * x) + scala.math.cos((monthT) * x * 2) + scala.math.cos((monthT) * x * 3)) * 10).toInt.toDouble, Vectors.dense(monthT.toDouble / 12.0, x.toDouble / 10.0, geo.toDouble / 300.0)))
           }
         }
       }
-    }
+
 
     val data = contextSQL.createDataFrame(crimeCollection).toDF("label", "features")
 

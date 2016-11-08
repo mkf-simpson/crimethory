@@ -14,7 +14,7 @@ object CrimeByPointNeuro extends MistJob with SQLSupport {
 
   def predict(month: Int, x: Int, lat: Double, lon: Double, contextSQL: SQLContext): Double= {
     if (Files.exists(Paths.get("model/data/_SUCCESS"))) {
-      val featureReq = Seq((1.0, Vectors.dense(month.toDouble / 12.0, x / 10.0, (math.abs(10.0*(lat+lon)).toDouble - math.abs(10.0*(lat+lon)).toInt))))
+      val featureReq = Seq((1.0, Vectors.dense(month.toDouble / 12.0, x / 10.0, (math.abs(10.0*(lat+lon)).toDouble - math.abs(10.0*(lat+lon)).toInt)/3.333)))
       val requestData = contextSQL.createDataFrame(featureReq).toDF("label", "features")
 
       val model = MultilayerPerceptronClassificationModel.load("model")
