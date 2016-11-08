@@ -24,7 +24,7 @@ docker run -d --link crimethory-mosquitto:mosquitto -p 2003:2003 --name crimetho
 ### Run streaming jobs
 
 ```sh
-docker exec -it crimethory-mist bash -c "/usr/share/mist/bin/mist start job --config /usr/share/mist/configs/docker.conf --route twitter --parameters {}"
+docker exec -it crimethory-mist bash -c "/usr/share/mist/bin/mist start job --config /usr/share/mist/configs/docker.conf --route twitter"
 ```
 
 ### Build application
