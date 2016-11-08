@@ -12,9 +12,9 @@ import java.nio.file.Files
 
 object CrimeByPointNeuro extends MistJob with SQLSupport {
 
-  def predict(month: Int, x: Int, contextSQL: SQLContext): Double= {
+  def predict(month: Int, x: Int, lat: Double, lon: Double, contextSQL: SQLContext): Double= {
     if (Files.exists(Paths.get("model/data/_SUCCESS"))) {
-      val featureReq = Seq((1.0, Vectors.dense(month.toDouble / 12.0, x / 10.0)))
+      val featureReq = Seq((1.0, Vectors.dense(month.toDouble / 12.0, x / 10.0, (math.abs(10.0*(lat+lon)).toDouble - math.abs(10.0*(lat+lon)).toInt))))
       val requestData = contextSQL.createDataFrame(featureReq).toDF("label", "features")
 
       val model = MultilayerPerceptronClassificationModel.load("model")
@@ -40,13 +40,13 @@ object CrimeByPointNeuro extends MistJob with SQLSupport {
     val month = parameters("month").asInstanceOf[BigInt].intValue
 
     val byPointK = Array(2, 5, 4, 3, 1)
-      .map((x: Int) => predict(month, x, contextSQL));
+      .map((x: Int) => predict(month, x, lat, lng, contextSQL));
 
     val byTypeK = Array(3, 4, 2, 1, 5)
-      .map((x: Int) => predict(month, x, contextSQL));
+      .map((x: Int) => predict(month, x, lat, lng, contextSQL));
 
     val historical = Array(4, 2, 3, 5, 1)
-      .map((x: Int) => predict(month, x, contextSQL));
+      .map((x: Int) => predict(month, x, lat, lng, contextSQL));
 
     Map(
       "by_point" -> byPointK.zipWithIndex.map({ case (s, i) => i.toString -> s }).toMap,
