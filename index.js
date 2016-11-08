@@ -63,4 +63,8 @@ io.on('connection', (socket) => {
         runningJobs[uid] = socket;
         client.publish("crimethory", JSON.stringify(request));
     });
+    
+    socket.on('diconnect', () => {
+        client.end();
+    });
 });
