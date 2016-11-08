@@ -18,8 +18,8 @@ object CrimeTwitter extends MistJob with MQTTPublisher {
         val x = collected(idx)
         publish(Map(
           "text" -> x.getText,
-          "screenName" -> s.getUser.getScreenName,
-          "name" -> s.getUser.getName,
+          "screenName" -> x.getUser.getScreenName,
+          "name" -> x.getUser.getName,
           "id" -> x.getId
         ))
         idx += 1
