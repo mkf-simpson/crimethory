@@ -10,7 +10,7 @@ object CrimeTwitter extends MistJob with MQTTPublisher {
     context.setLogLevel("INFO")
 
     val ssc = new StreamingContext(context, Seconds(30))
-    val stream = TwitterUtils.createStream(ssc, None, Array("#crimethory"))
+    val stream = TwitterUtils.createStream(ssc, None, Array("#trump", "#clinton"))
     stream.foreachRDD { (rdd) =>
       val collected: Array[Status] = rdd.collect()
       var idx = 0
