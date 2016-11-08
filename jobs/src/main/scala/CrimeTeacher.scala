@@ -11,7 +11,7 @@ object CrimeTeacher extends MistJob with SQLSupport {
     val context = session.sparkContext
 
     var crimeCollection = collection.mutable.ArrayBuffer[(Double, org.apache.spark.ml.linalg.Vector)]()
-
+    for(iter <- 1 to 5) {
       for (geo <- 1 to 300) {
         for (x <- 1 to 10) {
           for (monthT <- 1 to 12) {
@@ -19,6 +19,7 @@ object CrimeTeacher extends MistJob with SQLSupport {
           }
         }
       }
+    }
 
 
     val data = contextSQL.createDataFrame(crimeCollection).toDF("label", "features")
