@@ -9,7 +9,7 @@ cd ..
 ### Run MQTT server
 
 ```sh
-docker run docker run --name crimethory-mosquitto -d ansi/mosquitto
+docker run --name crimethory-mosquitto -d ansi/mosquitto
 ```
 
 ### Run Mist
@@ -24,7 +24,7 @@ docker run -d --link crimethory-mosquitto:mosquitto -p 2003:2003 --name crimetho
 ### Run streaming jobs
 
 ```sh
-docker exec -it crimethory-mist bash -c "/usr/share/mist/bin/mist start job --config /usr/share/mist/configs/docker.conf --route twitter --parameters {}"
+docker exec -it crimethory-mist bash -c "/usr/share/mist/bin/mist start job --config /usr/share/mist/configs/docker.conf --route twitter"
 ```
 
 ### Build application

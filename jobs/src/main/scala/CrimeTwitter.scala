@@ -6,25 +6,25 @@ import org.apache.spark.streaming.twitter._
 import twitter4j.Status
 
 object CrimeTwitter extends MistJob with MQTTPublisher {
-  /** Contains implementation of spark job with ordinary [[org.apache.spark.SparkContext]]
-    * Abstract method must be overridden
-    *
-    * @param parameters user parameters
-    * @return result of the job
-    */
   override def doStuff(parameters: Map[String, Any]): Map[String, Any] = {
     context.setLogLevel("INFO")
 
     val ssc = new StreamingContext(context, Seconds(30))
-    val stream = TwitterUtils.createStream(ssc, None, Array("#crimethory"))
+    val stream = TwitterUtils.createStream(ssc, None, Array("#trump"))
     stream.foreachRDD { (rdd) =>
       val collected: Array[Status] = rdd.collect()
       var idx = 0
+      println(s"${collected.length} tweets found")
       while (idx < collected.length) {
         val x = collected(idx)
-        val str = s"""{"text": "${x.getText}", "screenName": "${x.getUser.getScreenName}", "name": "${x.getUser.getName}", "id": "${x.getId}"}"""
-        publish(str)
-        println(str)
+        if (!x.getText.startsWith("RT")) {
+          publish(Map(
+            "text" -> x.getText,
+            "screenName" -> x.getUser.getScreenName,
+            "name" -> x.getUser.getName,
+            "id" -> x.getId
+          ))
+        }
         idx += 1
       }
     }
@@ -32,6 +32,6 @@ object CrimeTwitter extends MistJob with MQTTPublisher {
     ssc.start()
     ssc.awaitTermination()
 
-    Map("result" -> "success")
+    Map.empty[String, Any]
   }
 }
