@@ -524,7 +524,7 @@
           });
           socket.on("new tweet", (tweet) => {
             twttr.widgets.createTweet(
-                    tweet['id'],
+                    tweet['id'].toString(),
                     document.querySelector('.tweets')
             ).then((a) => {
               a.parentNode.insertBefore(a, a.parentNode.childNodes[0]);
