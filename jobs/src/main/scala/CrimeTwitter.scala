@@ -14,6 +14,7 @@ object CrimeTwitter extends MistJob with MQTTPublisher {
     stream.foreachRDD { (rdd) =>
       val collected: Array[Status] = rdd.collect()
       var idx = 0
+      println(s"${collected.length} tweets found")
       while (idx < collected.length) {
         val x = collected(idx)
         publish(Map(
