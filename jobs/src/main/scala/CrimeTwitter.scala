@@ -12,7 +12,11 @@ object CrimeTwitter extends MistJob with MQTTPublisher {
     val ssc = new StreamingContext(context, Seconds(30))
     val stream = TwitterUtils.createStream(ssc, None, Array("#trump"))
     stream.foreachRDD { (rdd) =>
-      val collected: Array[Status] = rdd.collect()
+      val collected: Array[Status] = rdd
+        .filter({ (tweet: Status) => {
+          !tweet.getText.startsWith("RT")
+        } })
+        .collect()
       var idx = 0
       println(s"${collected.length} tweets found")
       while (idx < collected.length) {
