@@ -17,7 +17,7 @@ object CrimeTwitter extends MistJob with MQTTPublisher {
       println(s"${collected.length} tweets found")
       while (idx < collected.length) {
         val x = collected(idx)
-        if (x.startsWith("RT")) {
+        if (x.getText.startsWith("RT")) {
           publish(Map(
             "text" -> x.getText,
             "screenName" -> x.getUser.getScreenName,
