@@ -33,11 +33,11 @@ io.on('connection', (socket) => {
             let result;
             try {
                 result = JSON.parse(message.toString());
-                if (result && result['request'] && runningJobs[result['request']['external_id']] === socket) {
+                if (result && result['request'] && runningJobs[result['request']['externalId']] === socket) {
                     if (result['success']) {
                         socket.emit("got stat", result["payload"]);
                     }
-                    delete runningJobs[result['request']['external_id']];
+                    delete runningJobs[result['request']['externalId']];
                 }
                 if (result && result['text'] && result['id']) {
                     console.log("new tweet: ", result);
@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
                 lng: lng.toFixed(4),
                 month
             },
-            external_id: uid
+            externalId: uid
         };
         runningJobs[uid] = socket;
         client.publish("crimethory", JSON.stringify(request));
