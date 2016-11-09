@@ -54,6 +54,7 @@ io.on('connection', (socket) => {
         const options = {
             uri: 'http://mist:2003/api/train',
             json: true,
+            method: 'POST',
             body: {
                 lat: lat.toFixed(4),
                 lng: lng.toFixed(4),
