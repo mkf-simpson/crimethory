@@ -3,6 +3,7 @@
 import express from 'express';
 import mqtt from 'mqtt';
 import uuid from 'node-uuid';
+import rp from 'request-promise';
 
 const app = express();
 app.use(express.static('public'));
@@ -50,18 +51,29 @@ io.on('connection', (socket) => {
     });
 
     socket.on('get stat', ({ lat, lng, month }) => {
-        const uid = uuid.v1();
-        const request = {
-            route: "stats",
-            parameters: {
+        const options = {
+            uri: 'http://mist:2003/api/train',
+            json: true,
+            body: {
                 lat: lat.toFixed(4),
                 lng: lng.toFixed(4),
                 month
-            },
-            externalId: uid
+            }
         };
-        runningJobs[uid] = socket;
-        client.publish("crimethory", JSON.stringify(request));
+        rp(options).then(() => {
+            const uid = uuid.v1();
+            const request = {
+                route: "stats",
+                parameters: {
+                    lat: lat.toFixed(4),
+                    lng: lng.toFixed(4),
+                    month
+                },
+                externalId: uid
+            };
+            runningJobs[uid] = socket;
+            client.publish("crimethory", JSON.stringify(request));
+        }).catch((e) => console.error(e));
     });
     
     socket.on('diconnect', () => {
