@@ -522,19 +522,22 @@
             document.querySelector('.splash-screen').style.marginTop = '150%';
             hideSpinner();
           });
+          const tweetsElement = document.querySelector('.tweets');
           socket.on("new tweet", (tweet) => {
-            twttr.widgets.createTweet(
-                    tweet['id'].toString(),
-                    document.querySelector('.tweets')
-            ).then((a) => {
-              if (!a) {
-                return;
-              }
-              a.parentNode.insertBefore(a, a.parentNode.childNodes[0]);
-              while (a.parentNode.childNodes.length > 100) {
-                a.parentNode.removeChild(a.parentNode.childNodes[a.parentNode.childNodes.length - 1]);
-              }
-            }).catch((r) => { console.error(r) });
+            twttr.widgets
+              .createTweet(tweet['id'].toString(), tweetsElement)
+              .then((a) => {
+                if (!a) {
+                  return;
+                }
+                tweetsElement.insertBefore(a, tweetsElement.childNodes[0]);
+                while (tweetsElement.childNodes.length > 100) {
+                  tweetsElement.removeChild(tweetsElement.childNodes[tweetsElement.childNodes.length - 1]);
+                }
+              })
+              .catch((r) => { 
+                console.error(r);
+              });
           });
           getStat();
         });
