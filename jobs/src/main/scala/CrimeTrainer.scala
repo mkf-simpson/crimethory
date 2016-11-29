@@ -1,23 +1,26 @@
+import java.io.FileOutputStream
+
 import io.hydrosphere.mist.lib.{MistJob, SQLSupport}
-import org.apache.spark.ml.classification.{MultilayerPerceptronClassifier}
+import org.apache.spark.ml.classification.MultilayerPerceptronClassifier
 import org.apache.spark.ml.linalg.Vectors
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
-import scala.util.Random
-
+import org.jpmml.sparkml.ConverterUtil
 import java.nio.file.{Files, Paths}
+
+import org.apache.spark.ml.Pipeline
+import org.jpmml.model.MetroJAXBUtil
 
 object CrimeTrainer extends MistJob with SQLSupport {
 
   def doStuff(parameters: Map[String, Any]): Map[String, Any] = {
 
     val contextSQL = session.sqlContext
-    val context = session.sparkContext
 
     val lat = parameters("lat").asInstanceOf[String].toDouble
     val lng = parameters("lng").asInstanceOf[String].toDouble
     val month = parameters("month").asInstanceOf[BigInt].intValue
 
-    if (Files.exists(Paths.get(s"model_${lat}_${lng}/data/_SUCCESS"))) {
+    if (Files.exists(Paths.get(s"model_${lat}_$lng/data/_SUCCESS"))) {
       return Map("result" -> "already trained")
     }
 
@@ -43,9 +46,14 @@ object CrimeTrainer extends MistJob with SQLSupport {
       .setSeed(1234L)
       .setMaxIter(300)
 
-    val model = trainer.fit(train)
+    val pipeline = new Pipeline().setStages(Array(trainer))
 
-    model.write.overwrite().save(s"model_${lat}_${lng}")
+    val model = pipeline.fit(train)
+
+    model.write.overwrite().save(s"model_${lat}_$lng")
+    val pmml = ConverterUtil.toPMML(data.schema, model)
+    val outputStream = new FileOutputStream(s"./model_${lat}_$lng.pmml")
+    MetroJAXBUtil.marshalPMML(pmml, outputStream)
 
     val result = model.transform(test)
     val predictionAndLabels = result.select("prediction", "label")

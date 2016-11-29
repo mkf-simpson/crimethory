@@ -12,5 +12,7 @@ libraryDependencies ++= Seq(
     "org.apache.spark" %% "spark-mllib" % "2.0.0",
     "org.apache.spark" %% "spark-streaming" % "2.0.0",
     "org.apache.bahir" %% "spark-streaming-twitter" % "2.0.0",
+    "org.jpmml" % "jpmml-sparkml" % "1.1.4",
+    "org.jpmml" % "pmml-model" % "1.3.4",
     "org.twitter4j" % "twitter4j-stream" % "4.0.4"
 )
