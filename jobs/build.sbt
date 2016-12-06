@@ -14,5 +14,8 @@ libraryDependencies ++= Seq(
     "org.apache.bahir" %% "spark-streaming-twitter" % "2.0.0",
     "org.jpmml" % "jpmml-sparkml" % "1.1.4",
     "org.jpmml" % "pmml-model" % "1.3.4",
-    "org.twitter4j" % "twitter4j-stream" % "4.0.4"
+    "org.twitter4j" % "twitter4j-stream" % "4.0.4",
+    "io.circe" %% "circe-core" % "0.6.1",
+    "io.circe" %% "circe-generic" % "0.6.1",
+    "io.circe" %% "circe-parser" % "0.6.1"
 )

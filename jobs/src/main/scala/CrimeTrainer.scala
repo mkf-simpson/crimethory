@@ -4,11 +4,10 @@ import io.hydrosphere.mist.lib.{MistJob, SQLSupport}
 import org.apache.spark.ml.classification.MultilayerPerceptronClassifier
 import org.apache.spark.ml.linalg.Vectors
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
-import org.jpmml.sparkml.ConverterUtil
 import java.nio.file.{Files, Paths}
 
 import org.apache.spark.ml.Pipeline
-import org.jpmml.model.MetroJAXBUtil
+import org.apache.spark.sql.SaveMode
 
 object CrimeTrainer extends MistJob with SQLSupport {
 
@@ -51,9 +50,6 @@ object CrimeTrainer extends MistJob with SQLSupport {
     val model = pipeline.fit(train)
 
     model.write.overwrite().save(s"model_${lat}_$lng")
-    val pmml = ConverterUtil.toPMML(data.schema, model)
-    val outputStream = new FileOutputStream(s"./model_${lat}_$lng.pmml")
-    MetroJAXBUtil.marshalPMML(pmml, outputStream)
 
     val result = model.transform(test)
     val predictionAndLabels = result.select("prediction", "label")
