@@ -12,17 +12,20 @@ import org.apache.spark.ml.PipelineModel
 object CrimeStats extends MistJob with SQLSupport {
 
   def predict(month: Int, x: Int, lat: Double, lon: Double, contextSQL: SQLContext, model: PipelineModel): Double = {
-    if (Files.exists(Paths.get(s"model_${lat}_${lon}/data/_SUCCESS"))) {
+    if (Files.exists(Paths.get(s"model_${lat}_${lon}"))) {
       val featureReq = Seq((1.0, Vectors.dense(month.toDouble / 12.0)))
       val requestData = contextSQL.createDataFrame(featureReq).toDF("label", "features")
 
       val prediction = model.transform(requestData)
+      prediction.show()
       val predictedCrime = prediction.select("prediction").head()
       if (predictedCrime.size > 0)
         println("crime: ", predictedCrime.toString)
       predictedCrime(0).toString.toDouble / 100 + scala.math.abs(scala.math.sin((lat + lon + month) * x))
     }
-    else 0.0
+    else {
+      0.0
+    }
   }
 
   def doStuff(parameters: Map[String, Any]): Map[String, Any] = {
